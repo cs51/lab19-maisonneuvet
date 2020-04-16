@@ -107,7 +107,7 @@ let get_name : id -> string =
 (* update_balance id amount -- Modifies the balance of the customer
    account with the given id,setting it to the given amount. *)
 let update_balance (id : id) (amount : int) : unit =
-  if List.mem ({id; _}) (!database) then 
+  if List.exists (fun x -> x.id = id) (!database) then 
     let account = List.find (fun x -> x.id = id) !database in
     account.balance <- amount
   else raise Not_found ;;
