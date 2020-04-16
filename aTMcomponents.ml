@@ -56,7 +56,8 @@ let initialize (lst : account_spec list) : unit =
 (* acquire_id () -- Requests from the ATM customer and returns an id
    (akin to entering one's ATM card), by prompting for an id number
    and reading an id from stdin. *)
-let acquire_id : id = 
+let acquire_id : unit -> id = 
+   fun () -> 
    Printf.printf ("Enter customer id: ");
    read_int () ;;
    
@@ -64,17 +65,19 @@ let acquire_id : id =
 (* acquire_amount () -- Requests from the ATM customer and returns an
    amount by prompting for an amount and reading an int from stdin. *)
 let acquire_amount =
+  fun () -> 
   Printf.printf "Enter amount: "; 
   read_int () ;;
 
 (* acquire_act () -- Requests from the user and returns an action to
    be performed, as a value of type action *)
 let acquire_act =
+  fun () -> 
   Printf.printf "Enter action: (B) Balance (-) Withdraw (+) Deposit (=) Done (X) Exit: "; 
   match read_line () with 
   | "B" -> Balance
-  | "-" -> Withdraw acquire_amount
-  | "+" -> Deposit acquire_amount
+  | "-" -> Withdraw (acquire_amount ())
+  | "+" -> Deposit (acquire_amount ())
   | "=" -> Next
   | "X" -> Finished
   | _ -> failwith "require action" ;;
@@ -119,10 +122,15 @@ let update_balance (id : id) (amount : int) : unit =
 (* present_message message -- Presents to the customer (on stdout) the
    given message followed by a newline. *)
 let present_message (s : string) : unit =
-  Printf.printf "%s/n" s ;;
+  Printf.printf "%s\n" s ;;
 
 (* deliver_cash amount -- Dispenses the given amount of cash to the
    customer (really just prints to stdout a message to that
    effect). *)
 let deliver_cash (cash : int) : unit =
-  Printf.printf "%i/n" cash ;;
+   let twenties = cash / 20 in
+    let rest = cash mod 20 in
+      for _i = 1 to twenties do
+         Printf.printf "[20 @ 20]"
+      done;
+      Printf.printf " and %i more\n" rest;;
