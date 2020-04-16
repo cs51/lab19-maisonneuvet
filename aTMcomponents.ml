@@ -94,7 +94,7 @@ let acquire_act =
 let get_balance : id -> int =
   let aux (id : id) =
     match (List.filter (fun acc -> acc.id = id) !database) with
-    | [] -> raise (Invalid_argument "ID does not exist")
+    | [] -> raise (Not_found)
     | hd :: _ -> hd.balance
   in aux ;;
 
@@ -103,7 +103,7 @@ let get_balance : id -> int =
 let get_name : id -> string =
   let aux (id : id) =
     match (List.filter (fun acc -> acc.id = id) !database) with
-    | [] -> raise (Invalid_argument "ID does not exist")
+    | [] -> raise (Not_found)
     | hd :: _ -> hd.name 
    in aux ;;
 
